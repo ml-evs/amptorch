@@ -18,22 +18,22 @@ class TestMethods(unittest.TestCase):
     # def test_consistency(self):
     #     test_energy_force_consistency()
 
-    def test_cosine_and_polynomial_cutoff_funcs(self):
-        test_cutoff_funcs()
+    # def test_cosine_and_polynomial_cutoff_funcs(self):
+    #     test_cutoff_funcs()
 
-    def test_gds(self):
-        test_gaussian_descriptor_set()
+    # def test_gds(self):
+    #     test_gaussian_descriptor_set()
 
-    def test_load_retrain(self):
-        test_pretrained()
-        test_pretrained_no_config()
+    # def test_load_retrain(self):
+    #     test_pretrained()
+    #     test_pretrained_no_config()
 
-    def test_load_retrain_lmdb(self):
-        test_lmdb_pretrained()
-        test_lmdb_pretrained_no_config()
+    # def test_load_retrain_lmdb(self):
+    #     test_lmdb_pretrained()
+    #     test_lmdb_pretrained_no_config()
 
-    def test_training_scenarios(self):
-        test_training()
+    # def test_training_scenarios(self):
+    #     test_training()
 
     def test_training_scenarios_gmp(self):
         test_training_gmp()

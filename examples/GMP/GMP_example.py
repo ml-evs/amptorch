@@ -21,23 +21,44 @@ for dist in distances:
     images.append(image)
 
 
-sigmas = [0.02, 0.2, 0.4, 0.69, 1.1, 1.66, 2.66, 4.4]
-MCSHs = {
-    "MCSHs": {
-        "0": {"groups": [1], "sigmas": sigmas},
-        "1": {"groups": [1], "sigmas": sigmas},
-        "2": {"groups": [1, 2], "sigmas": sigmas},
-        "3": {"groups": [1, 2, 3], "sigmas": sigmas},
-        # "4": {"groups": [1, 2, 3, 4], "sigmas": sigmas},
-        # "5": {"groups": [1, 2, 3, 4, 5], "sigmas": sigmas},
-        # "6": {"groups": [1, 2, 3, 4, 5, 6, 7], "sigmas": sigmas},
+### Construct parameters
+# define sigmas
+nsigmas = 4
+sigmas = np.linspace(0, 2.0, nsigmas + 1, endpoint=True)[1:]
+
+# define MCSH orders
+MCSHs_index = 2
+MCSHs_dict = {
+    0: {
+        "orders": [0],
+        "sigmas": sigmas,
     },
+    1: {
+        "orders": [0, 1],
+        "sigmas": sigmas,
+    },
+    2: {
+        "orders": [0, 1, 2],
+        "sigmas": sigmas,
+    },
+    # 3: { "orders": [0,1,2,3], "sigmas": sigmas,},
+    # 4: { "orders": [0,1,2,3,4], "sigmas": sigmas,},
+    # 5: { "orders": [0,1,2,3,4,5], "sigmas": sigmas,},
+    # 6: { "orders": [0,1,2,3,4,5,6], "sigmas": sigmas,},
+    # 7: { "orders": [0,1,2,3,4,5,6,7], "sigmas": sigmas,},
+    # 8: { "orders": [0,1,2,3,4,5,6,7,8], "sigmas": sigmas,},
+    # 9: { "orders": [0,1,2,3,4,5,6,7,8,9], "sigmas": sigmas,},
+}
+MCSHs = MCSHs_dict[MCSHs_index]  # MCSHs is now just the order of MCSHs.
+
+GMP = {
+    "MCSHs": MCSHs,
     "atom_gaussians": {
         "C": "./valence_gaussians/C_pseudodensity_4.g",
         "O": "./valence_gaussians/O_pseudodensity_4.g",
         "Cu": "./valence_gaussians/Cu_pseudodensity_4.g",
     },
-    "cutoff": 8,
+    "cutoff": 12,
 }
 
 
@@ -60,8 +81,8 @@ config = {
         "raw_data": images,
         "val_split": 0,
         "elements": elements,
-        "fp_scheme": "gmp",
-        "fp_params": MCSHs,
+        "fp_scheme": "gmpordernorm",
+        "fp_params": GMP,
         "save_fps": True,
     },
     "cmd": {

@@ -23,45 +23,74 @@ for dist in distances:
     images.append(image)
 
 ### Construct parameters
+# define sigmas
+nsigmas = 4
+sigmas = np.linspace(0, 2.0, nsigmas + 1, endpoint=True)[1:]
 
-sigmas = np.logspace(np.log10(0.02), np.log10(1.0), num=4)
-MCSHs = {
-    "MCSHs": {
-        "0": {"groups": [1], "sigmas": sigmas},
-        "1": {"groups": [1], "sigmas": sigmas},
-        "2": {"groups": [1, 2], "sigmas": sigmas},
-        "3": {"groups": [1, 2, 3], "sigmas": sigmas},
+# define MCSH orders
+MCSHs_index = 2
+MCSHs_dict = {
+    0: {
+        "orders": [0],
+        "sigmas": sigmas,
     },
+    1: {
+        "orders": [0, 1],
+        "sigmas": sigmas,
+    },
+    2: {
+        "orders": [0, 1, 2],
+        "sigmas": sigmas,
+    },
+    # 3: { "orders": [0,1,2,3], "sigmas": sigmas,},
+    # 4: { "orders": [0,1,2,3,4], "sigmas": sigmas,},
+    # 5: { "orders": [0,1,2,3,4,5], "sigmas": sigmas,},
+    # 6: { "orders": [0,1,2,3,4,5,6], "sigmas": sigmas,},
+    # 7: { "orders": [0,1,2,3,4,5,6,7], "sigmas": sigmas,},
+    # 8: { "orders": [0,1,2,3,4,5,6,7,8], "sigmas": sigmas,},
+    # 9: { "orders": [0,1,2,3,4,5,6,7,8,9], "sigmas": sigmas,},
+}
+MCSHs = MCSHs_dict[MCSHs_index]  # MCSHs is now just the order of MCSHs.
+
+GMP = {
+    "MCSHs": MCSHs,
     "atom_gaussians": {
         "C": "amptorch/tests/GMP_params/C_pseudodensity_4.g",
         "O": "amptorch/tests/GMP_params/O_pseudodensity_4.g",
         "Cu": "amptorch/tests/GMP_params/Cu_pseudodensity_4.g",
     },
-    "cutoff": 10,
+    "cutoff": 12,
 }
-
 
 elements = ["Cu", "C", "O"]
 
 
 def get_config():
     config = {
-        "model": {"get_forces": True, "num_layers": 3, "num_nodes": 20},
+        "model": {
+            "name": "singlenn",
+            "get_forces": True,
+            "num_layers": 3,
+            "num_nodes": 20,
+            "batchnorm": True,
+            "activation": torch.nn.Tanh,
+        },
         "optim": {
             "force_coefficient": 0.04,
             "lr": 1e-3,
-            "batch_size": 10,
+            "batch_size": 16,
             "epochs": 300,
             "loss": "mse",
             "metric": "mae",
         },
         "dataset": {
             "raw_data": images,
-            "val_split": 0,
+            "fp_scheme": "gmpordernorm",
+            "fp_params": GMP,
             "elements": elements,
-            "fp_scheme": "gmp",
-            "fp_params": MCSHs,
-            "save_fps": False,
+            "save_fps": True,
+            "scaling": {"type": "normalize", "range": (0, 1)},
+            "val_split": 0,
         },
         "cmd": {
             "debug": False,
@@ -69,9 +98,11 @@ def get_config():
             "seed": 1,
             "identifier": "test",
             "verbose": False,
+            # Weights and Biases used for logging - an account(free) is required
             "logger": False,
         },
     }
+
     return config
 
 
@@ -85,7 +116,7 @@ def get_energy_metrics(config):
     predictions = trainer.predict(images)
     pred_energies = np.array(predictions["energy"])
     mae = np.mean(np.abs(true_energies - pred_energies))
-    assert mae < 0.02
+    assert mae < 0.03
 
 
 def get_force_metrics(config):
@@ -97,8 +128,9 @@ def get_force_metrics(config):
 
     e_mae = np.mean(np.abs(true_energies - pred_energies))
     f_mae = np.mean(np.abs(pred_forces - true_forces))
+
     assert e_mae < 0.06
-    assert f_mae < 0.06
+    assert f_mae < 0.10
 
 
 def test_training_gmp():
