@@ -1,9 +1,11 @@
 import numpy as np
+import os
 from ase import Atoms
 from ase.calculators.emt import EMT
-
+import torch
 from amptorch.trainer import AtomsTrainer
 
+### Construct/Load system into a list of ASE atoms object
 distances = np.linspace(2, 5, 10)
 images = []
 for dist in distances:
@@ -21,60 +23,44 @@ for dist in distances:
     images.append(image)
 
 
-### Construct parameters
-# define sigmas
-nsigmas = 4
-sigmas = np.linspace(0, 2.0, nsigmas + 1, endpoint=True)[1:]
-
-# define MCSH orders
-MCSHs_index = 2
-MCSHs_dict = {
-    0: {
-        "orders": [0],
-        "sigmas": sigmas,
-    },
-    1: {
-        "orders": [0, 1],
-        "sigmas": sigmas,
-    },
-    2: {
-        "orders": [0, 1, 2],
-        "sigmas": sigmas,
-    },
-    # 3: { "orders": [0,1,2,3], "sigmas": sigmas,},
-    # 4: { "orders": [0,1,2,3,4], "sigmas": sigmas,},
-    # 5: { "orders": [0,1,2,3,4,5], "sigmas": sigmas,},
-    # 6: { "orders": [0,1,2,3,4,5,6], "sigmas": sigmas,},
-    # 7: { "orders": [0,1,2,3,4,5,6,7], "sigmas": sigmas,},
-    # 8: { "orders": [0,1,2,3,4,5,6,7,8], "sigmas": sigmas,},
-    # 9: { "orders": [0,1,2,3,4,5,6,7,8,9], "sigmas": sigmas,},
-}
-MCSHs = MCSHs_dict[MCSHs_index]  # MCSHs is now just the order of MCSHs.
-
-GMP = {
-    "MCSHs": MCSHs,
-    "atom_gaussians": {
-        "C": "./valence_gaussians/C_pseudodensity_4.g",
-        "O": "./valence_gaussians/O_pseudodensity_4.g",
-        "Cu": "./valence_gaussians/Cu_pseudodensity_4.g",
-    },
-    "cutoff": 12,
-}
-
-
+### Hyperparameters that needs to be defined
 elements = ["Cu", "C", "O"]
+path_to_psp = "<path>/pseudodensity_psp/"
+# path to the GMP pseudopotential (.g)files
+# please copy the "pseudodensity_psp" folder to somehere and edit the path to it here
+
+nsigmas = 5
+max_MCSH_order = 3
+max_radial_sigma = 2.0
+
+
+### Construct GMP configuration, no need to change once the hyperparameters are specified.
+sigmas = np.linspace(0, max_radial_sigma, nsigmas + 1, endpoint=True)[1:]
+GMPs = {
+    "MCSHs": {"orders": list(range(max_MCSH_order + 1)), "sigmas": sigmas},
+    "atom_gaussians": {
+        x: os.path.join(path_to_psp, "{}_pseudodensity.g".format(x)) for x in elements
+    },
+    # "cutoff": 10.0, # don't need to specify, a default value will be provided.
+    "square": False,
+    "solid_harmonics": True,
+}
+
 config = {
     "model": {
         "name": "singlenn",
         "get_forces": False,
         "num_layers": 3,
         "num_nodes": 20,
+        # "hidden_layers": [20,20,20], # more flexible way of defining NN
+        "activation": torch.nn.GELU,
+        "batchnorm": True,
     },
     "optim": {
         "device": "cpu",
         "force_coefficient": 0.0,
         "lr": 1e-2,
-        "batch_size": 10,
+        "batch_size": 16,
         "epochs": 100,
     },
     "dataset": {
@@ -82,7 +68,7 @@ config = {
         "val_split": 0,
         "elements": elements,
         "fp_scheme": "gmpordernorm",
-        "fp_params": GMP,
+        "fp_params": GMPs,
         "save_fps": True,
     },
     "cmd": {

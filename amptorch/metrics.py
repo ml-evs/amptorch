@@ -70,11 +70,7 @@ def mse_forces_score(net, X, y):
 
 
 def evaluator(
-    val_split,
-    metric,
-    identifier,
-    forcetraining,
-    cp_metric,
+    val_split, metric, identifier, forcetraining, cp_metric,
 ):
     # print("evaluator")
     callbacks = []

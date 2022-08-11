@@ -100,9 +100,7 @@ class DataCollater:
             if self.forcetraining:
                 return batch, [batch.energy, batch.forces]
             else:
-                return batch, [
-                    batch.energy,
-                ]
+                return batch, [batch.energy,]
         else:
             return batch
 

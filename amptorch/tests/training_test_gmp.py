@@ -30,18 +30,9 @@ sigmas = np.linspace(0, 2.0, nsigmas + 1, endpoint=True)[1:]
 # define MCSH orders
 MCSHs_index = 2
 MCSHs_dict = {
-    0: {
-        "orders": [0],
-        "sigmas": sigmas,
-    },
-    1: {
-        "orders": [0, 1],
-        "sigmas": sigmas,
-    },
-    2: {
-        "orders": [0, 1, 2],
-        "sigmas": sigmas,
-    },
+    0: {"orders": [0], "sigmas": sigmas,},
+    1: {"orders": [0, 1], "sigmas": sigmas,},
+    2: {"orders": [0, 1, 2], "sigmas": sigmas,},
     # 3: { "orders": [0,1,2,3], "sigmas": sigmas,},
     # 4: { "orders": [0,1,2,3,4], "sigmas": sigmas,},
     # 5: { "orders": [0,1,2,3,4,5], "sigmas": sigmas,},
