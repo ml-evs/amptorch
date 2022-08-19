@@ -18,7 +18,10 @@ class FeatureScaler:
     """
 
     def __init__(
-        self, data_list, forcetraining, scaling,
+        self,
+        data_list,
+        forcetraining,
+        scaling,
     ):
         self.transform = scaling["type"]
         if self.transform not in ["normalize", "standardize"]:

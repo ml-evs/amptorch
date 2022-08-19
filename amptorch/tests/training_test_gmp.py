@@ -23,34 +23,19 @@ for dist in distances:
     images.append(image)
 
 ### Construct parameters
-# define sigmas
-nsigmas = 4
-sigmas = np.linspace(0, 2.0, nsigmas + 1, endpoint=True)[1:]
+nsigmas = 10
+max_MCSH_order = 3
+max_radial_sigma = 2.0
 
-# define MCSH orders
-MCSHs_index = 2
-MCSHs_dict = {
-    0: {"orders": [0], "sigmas": sigmas,},
-    1: {"orders": [0, 1], "sigmas": sigmas,},
-    2: {"orders": [0, 1, 2], "sigmas": sigmas,},
-    # 3: { "orders": [0,1,2,3], "sigmas": sigmas,},
-    # 4: { "orders": [0,1,2,3,4], "sigmas": sigmas,},
-    # 5: { "orders": [0,1,2,3,4,5], "sigmas": sigmas,},
-    # 6: { "orders": [0,1,2,3,4,5,6], "sigmas": sigmas,},
-    # 7: { "orders": [0,1,2,3,4,5,6,7], "sigmas": sigmas,},
-    # 8: { "orders": [0,1,2,3,4,5,6,7,8], "sigmas": sigmas,},
-    # 9: { "orders": [0,1,2,3,4,5,6,7,8,9], "sigmas": sigmas,},
-}
-MCSHs = MCSHs_dict[MCSHs_index]  # MCSHs is now just the order of MCSHs.
-
+sigmas = np.linspace(0, max_radial_sigma, nsigmas + 1, endpoint=True)[1:]
 GMP = {
-    "MCSHs": MCSHs,
+    "MCSHs": {"orders": list(range(max_MCSH_order + 1)), "sigmas": sigmas},
     "atom_gaussians": {
         "C": "amptorch/tests/GMP_params/C_pseudodensity_4.g",
         "O": "amptorch/tests/GMP_params/O_pseudodensity_4.g",
         "Cu": "amptorch/tests/GMP_params/Cu_pseudodensity_4.g",
     },
-    "cutoff": 12,
+    "cutoff": 8,
 }
 
 elements = ["Cu", "C", "O"]
@@ -80,7 +65,7 @@ def get_config():
             "fp_params": GMP,
             "elements": elements,
             "save_fps": True,
-            "scaling": {"type": "normalize", "range": (0, 1)},
+            "scaling": {"type": "normalize", "range": (-1, 1)},
             "val_split": 0,
         },
         "cmd": {
@@ -107,7 +92,8 @@ def get_energy_metrics(config):
     predictions = trainer.predict(images)
     pred_energies = np.array(predictions["energy"])
     mae = np.mean(np.abs(true_energies - pred_energies))
-    assert mae < 0.03
+    print("mae={}".format(mae))
+    assert mae < 0.05
 
 
 def get_force_metrics(config):
@@ -119,6 +105,9 @@ def get_force_metrics(config):
 
     e_mae = np.mean(np.abs(true_energies - pred_energies))
     f_mae = np.mean(np.abs(pred_forces - true_forces))
+
+    print("e_mae=", e_mae)
+    print("f_mae=", f_mae)
 
     assert e_mae < 0.06
     assert f_mae < 0.10

@@ -2,6 +2,7 @@ import numpy as np
 import os
 from ase import Atoms
 from ase.calculators.emt import EMT
+from ase.md.verlet import VelocityVerlet
 import torch
 from amptorch.trainer import AtomsTrainer
 
