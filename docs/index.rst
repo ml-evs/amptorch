@@ -21,6 +21,7 @@ Geometric <https://pytorch-geometric.readthedocs.io/en/latest/>`__ and
    :caption: Contents:
 
    installation.rst
+   usage.rst
    examples.rst
 
 
@@ -43,11 +44,3 @@ pull <https://github.com/ulissigroup/amptorch/pulls>`__ following the
 `guidelines <https://docs.github.com/en/get-started/quickstart/contributing-to-projects>`__
 and pertaining to the overall objective of this project as described
 above.
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
