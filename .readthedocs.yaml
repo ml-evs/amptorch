@@ -5,6 +5,10 @@ build:
   tools:
     python: "3.6"
 
-# Explicitly set the version of Python and its requirements
-conda:
-  environment: docs/environment.yaml
+mkdocs:
+  configuration: mkdocs.yml
+
+# Optionally declare the Python requirements required to build your docs
+python:
+   install:
+   - requirements: docs/requirements.txt
