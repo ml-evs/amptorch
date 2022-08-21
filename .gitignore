@@ -44,3 +44,4 @@ docs/_build/
 
 # some jupyter notebook as exceptions
 !examples/GMP/UQ_CP_example.ipynb
+!docs/requirements.txt
