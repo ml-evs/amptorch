@@ -6,4 +6,4 @@ dependencies:
   - sphinx==4.2.0
   - pip:
     - sphinx_rtd_theme==1.0.0
-    - myst-parser
+    - myst-parser==0.16.1
