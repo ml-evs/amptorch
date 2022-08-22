@@ -4,9 +4,9 @@
 Examples
 ==================================
 
-----------------------------------
+--------------------------------------------
 Gaussian Multiple (GMP) Descriptors
-----------------------------------
+--------------------------------------------
 
 In addition to conventional Atom-centered Symmetry Functions as
 fingerprinting scheme, AmpTorch also support GMP descriptors that uses
@@ -30,9 +30,9 @@ For an example script of using GMP, please refer to:
    examples/GMP/GMP_example.py
 
 
-----------------------------------
+------------------------------------------------------
 SingleNN Atomistic Neural Network Structures
-----------------------------------
+------------------------------------------------------
 
 
 As GMPs encode the information about chemical elements based on
@@ -53,9 +53,9 @@ define:
 
 as shown in ``examples/GMP/GMP_example.py``
 
-----------------------------------
+----------------------------------------------------------------
 lmdb as Database Management Solution for Large Dataset
-----------------------------------
+----------------------------------------------------------------
 
 
 For AmpTorch to be compatible to train with large datasets such as `Open
@@ -74,9 +74,9 @@ Examples can be found in:
    examples/train_lmdb_full_cache_example.py
    examples/train_lmdb_partial_cache_example.py
 
-----------------------------------
+--------------------------------------------------------------------------
 Uncertainty Quantification (UQ) via Conformal Prediction (CP)
-----------------------------------
+--------------------------------------------------------------------------
 
 
 AmpTorch implements UQ as an optional feature during the prediction.

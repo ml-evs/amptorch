@@ -21,7 +21,7 @@ Geometric <https://pytorch-geometric.readthedocs.io/en/latest/>`__ and
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-      installation
+      installation.rst
       usage.rst
       examples.rst
 
