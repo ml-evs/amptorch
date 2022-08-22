@@ -1,10 +1,11 @@
-.. AmpTorch for Atomistic Machine-Learning Package in PyTorch documentation master file, created by
-   sphinx-quickstart on Sun Aug 21 19:02:53 2022.
+.. AmpTorch documentation master file, created by
+   sphinx-quickstart on Sun Aug 21 20:32:38 2022.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 Welcome to AmpTorch's documentation!
-======================================================================================
+====================================
+
 
 *AmpTorch* is a PyTorch implementation of the `Atomistic
 Machine-learning Package <https://amp.readthedocs.io/en/latest/>`__
@@ -16,13 +17,13 @@ supercomputers. *AmpTorch* is built on top of `PyTorch
 Geometric <https://pytorch-geometric.readthedocs.io/en/latest/>`__ and
 `Skorch <https://skorch.readthedocs.io/en/stable/>`__.
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-   installation.rst
-   usage.rst
-   examples.rst
+      installation
+      usage.rst
+      examples.rst
 
 
 Development notes
@@ -44,3 +45,10 @@ pull <https://github.com/ulissigroup/amptorch/pulls>`__ following the
 `guidelines <https://docs.github.com/en/get-started/quickstart/contributing-to-projects>`__
 and pertaining to the overall objective of this project as described
 above.
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
