@@ -3,12 +3,13 @@ import datetime
 import os
 import random
 import warnings
-import json
+from typing import Union
 
 import ase.io
 import numpy as np
 import skorch.net
 import torch
+
 from skorch import NeuralNetRegressor
 from skorch.callbacks import LRScheduler
 from skorch.dataset import CVSplit
@@ -16,9 +17,6 @@ from collections import OrderedDict
 
 from amptorch.dataset import AtomsDataset, DataCollater, construct_descriptor
 from amptorch.dataset_lmdb import (
-    AtomsLMDBDataset,
-    AtomsLMDBDatasetPartialCache,
-    AtomsLMDBDatasetCache,
     PartialCacheSampler,
     get_lmdb_dataset,
 )
@@ -29,10 +27,9 @@ from amptorch.preprocessing import AtomsToData
 from amptorch.utils import (
     to_tensor,
     train_end_load_best_loss,
-    save_normalizers,
-    check_memory,
     InOrderSplit,
 )
+from amptorch.config import TrainingConfig
 from amptorch.data_parallel import DataParallel, ParallelCollater
 from amptorch.ase_utils import AmpTorch
 
@@ -47,8 +44,12 @@ except NameError:
 
 
 class AtomsTrainer:
-    def __init__(self, config={}):
-        self.config = config
+    def __init__(self, config: Union[TrainingConfig, dict] = TrainingConfig()):
+        if isinstance(config, dict):
+            self.config = TrainingConfig(**config)
+        else:
+            self.config = config
+
         self.pretrained = False
 
     def load(self, load_dataset=True):
